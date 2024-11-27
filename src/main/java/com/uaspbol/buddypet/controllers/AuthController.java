@@ -102,6 +102,14 @@ public class AuthController extends Controller {
             }
             
             // validation
+            if(email.equals("") || password.equals("") || confirmPassword.equals("")) {
+                throw new Exception("Kolom input wajib diisi!");
+            }
+            
+            if(!email.contains("@")) {
+                throw new Exception("Format email tidak valid!");
+            }
+            
             query = "SELECT email FROM users WHERE email = ?";
             preparedStatement = conn.prepareStatement(query);
             preparedStatement.setString(1, email);
@@ -120,13 +128,14 @@ public class AuthController extends Controller {
             }
 
             // insert user data
-            query = "INSERT INTO users VALUES(?, ?, ?, ?, ?)";
+            query = "INSERT INTO users VALUES(?, ?, ?, ?, ?, ?)";
             preparedStatement = conn.prepareStatement(query);
             preparedStatement.setString(1, id);
             preparedStatement.setString(2, email);
             preparedStatement.setString(3, password);
             preparedStatement.setString(4, role);
             preparedStatement.setString(5, otp);
+            preparedStatement.setDate(6, null);
             preparedStatement.executeQuery();
             
             System.out.println("Akun berhasil dibuat. Silakan login!");
