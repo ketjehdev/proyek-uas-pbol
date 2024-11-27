@@ -5,7 +5,7 @@
 package com.uaspbol.buddypet.views;
 
 import com.uaspbol.buddypet.controllers.AuthController;
-import java.util.ArrayList;
+import com.uaspbol.buddypet.models.User;
 import java.awt.event.*;
 /**
  *
@@ -135,13 +135,13 @@ public class LoginFrame extends javax.swing.JFrame {
     private void loginBtnActionPerformed(ActionEvent evt) {// GEN-FIRST:event_jButton1ActionPerformed
         // TODO add your handling code here:
         AuthController auth = new AuthController();
-        ArrayList<String> credentials = new ArrayList<>();
+        User credentials = new User();
         
         String inputEmail = email.getText();
         String inputPassword = password.getText();
         
-        credentials.add(inputEmail);
-        credentials.add(inputPassword);
+        credentials.setEmail(inputEmail);
+        credentials.setPassword(inputPassword);
         
         auth.attempt(credentials, this);
 

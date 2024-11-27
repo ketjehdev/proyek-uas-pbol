@@ -13,13 +13,17 @@ import java.util.Random;
 
 public class AuthController extends Controller {
 
-    public void attempt(ArrayList<String> credentials, JFrame component) {
+    public void attempt(User credentials, JFrame component) {
         try {
-            String email = credentials.get(0);
-            String password = credentials.get(1);
+            String email = credentials.getEmail();
+            String password = credentials.getPassword();
 
             if (email.equals("") || password.equals("")) {
                 throw new Exception("Kolom input wajib diisi buddy!");
+            }
+            
+            if(!email.contains("@")) {
+                throw new Exception("Format email tidak valid!");
             }
 
             query = "SELECT * FROM users WHERE email = ?";
