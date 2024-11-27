@@ -12,12 +12,12 @@ import java.sql.*;
  */
 public class Database {
     private final String JDBC_URL = "jdbc:oracle:thin:@localhost:1521:xe";
-    private final String USER = "buddy";
+    private final String USER = "hr";
     private final String PASSWORD = "buddypet10";
 
     public Connection conn;
 
-    public void getConnection() {
+    public Connection getConnection() {
         try {
             Class.forName("oracle.jdbc.driver.OracleDriver");
             conn = DriverManager.getConnection(JDBC_URL, USER, PASSWORD);
@@ -27,6 +27,8 @@ public class Database {
             System.out.println("Tidak dapat terkoneksi.");
             System.out.println(e.getMessage());
         }
+
+        return conn;
     }
 
     public void close() {
