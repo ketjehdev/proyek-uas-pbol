@@ -4,11 +4,9 @@
  */
 package com.uaspbol.buddypet.views;
 
-import java.sql.SQLException;
-
 import com.uaspbol.buddypet.controllers.AuthController;
 import java.util.ArrayList;
-
+import java.awt.event.*;
 /**
  *
  * @author LENOVO
@@ -20,7 +18,6 @@ public class LoginFrame extends javax.swing.JFrame {
      */
     public LoginFrame() {
         initComponents();
-
     }
 
     /**
@@ -135,7 +132,7 @@ public class LoginFrame extends javax.swing.JFrame {
         setLocationRelativeTo(null);
     }// </editor-fold>//GEN-END:initComponents
 
-    private void loginBtnActionPerformed(java.awt.event.ActionEvent evt) {// GEN-FIRST:event_jButton1ActionPerformed
+    private void loginBtnActionPerformed(ActionEvent evt) {// GEN-FIRST:event_jButton1ActionPerformed
         // TODO add your handling code here:
         AuthController auth = new AuthController();
         ArrayList<String> credentials = new ArrayList<>();
@@ -147,7 +144,7 @@ public class LoginFrame extends javax.swing.JFrame {
         credentials.add(inputPassword);
         
         auth.attempt(credentials, this);
-        
+
     }// GEN-LAST:event_jButton1ActionPerformed
 
     /**
