@@ -132,7 +132,7 @@ public class RegisterFrame extends javax.swing.JFrame {
         jPanel3.setBackground(new java.awt.Color(51, 0, 0));
         jPanel3.setBorder(new javax.swing.border.SoftBevelBorder(javax.swing.border.BevelBorder.RAISED));
 
-        jLabel4.setIcon(new javax.swing.ImageIcon("C:\\Users\\LENOVO\\Downloads\\DALL·E 2024-12-01 20.42.29 - A 2D illustration of a single pet, a playful dog with a friendly expression, placed in a serene outdoor setting. The background is a deep red hue, sug.png")); // NOI18N
+        jLabel4.setIcon(new javax.swing.ImageIcon("C:\\Users\\LENOVO\\Downloads\\background2.png")); // NOI18N
 
         javax.swing.GroupLayout jPanel3Layout = new javax.swing.GroupLayout(jPanel3);
         jPanel3.setLayout(jPanel3Layout);

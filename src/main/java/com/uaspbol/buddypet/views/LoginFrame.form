@@ -206,7 +206,10 @@
           <Layout>
             <DimensionLayout dim="0">
               <Group type="103" groupAlignment="0" attributes="0">
-                  <Component id="jLabel3" alignment="0" pref="281" max="32767" attributes="0"/>
+                  <Group type="102" alignment="0" attributes="0">
+                      <Component id="jLabel3" min="-2" pref="295" max="-2" attributes="0"/>
+                      <EmptySpace min="0" pref="0" max="32767" attributes="0"/>
+                  </Group>
               </Group>
             </DimensionLayout>
             <DimensionLayout dim="1">
@@ -219,9 +222,8 @@
             <Component class="javax.swing.JLabel" name="jLabel3">
               <Properties>
                 <Property name="icon" type="javax.swing.Icon" editor="org.netbeans.modules.form.editors2.IconEditor">
-                  <Image iconType="2" name="C:\Users\LENOVO\Downloads\DALL&#xb7;E 2024-12-01 20.04.44 - A 2D illustration of various pets including a dog, a cat, and a rabbit, placed in a serene outdoor setting. The background is a deep orange hue, sugge.png"/>
+                  <Image iconType="2" name="C:\Users\LENOVO\Downloads\background1.png"/>
                 </Property>
-                <Property name="text" type="java.lang.String" value="jLabel3"/>
               </Properties>
             </Component>
           </SubComponents>
