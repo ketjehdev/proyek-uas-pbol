@@ -1,6 +1,7 @@
 package com.uaspbol.buddypet.controllers;
 
 import com.uaspbol.buddypet.models.User;
+import com.uaspbol.buddypet.utils.Mail;
 import com.uaspbol.buddypet.views.LoginFrame;
 import com.uaspbol.buddypet.views.RegisterFrame;
 import java.sql.Date;
@@ -138,6 +139,8 @@ public class AuthController extends Controller {
             preparedStatement.setDate(6, null);
             preparedStatement.executeQuery();
             
+            Mail mail = new Mail();
+            mail.sendEmail(email, "Kode OTP BuddyPet", otp);
             System.out.println("Akun berhasil dibuat. Silakan login!");
             
             if(component != null) {
@@ -229,9 +232,9 @@ public class AuthController extends Controller {
         return registerFrame;
     }
     
-    // public void forgotPassword() {
-    // }
+   // public void forgotPassword() {
+   // }
     
-// public void resetPassword() {
+    // public void resetPassword() {
     // }
 }
