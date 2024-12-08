@@ -5,6 +5,8 @@
 package com.uaspbol.buddypet.controllers;
 
 import com.uaspbol.buddypet.models.User;
+import com.uaspbol.buddypet.utils.MessageError;
+import com.uaspbol.buddypet.utils.MessageSuccess;
 import java.sql.Date;
 import java.sql.SQLException;
 import java.time.LocalDate;
@@ -23,20 +25,25 @@ public class UserController extends Controller {
             statement = conn.createStatement();
             result = statement.executeQuery(query);
 
+            DefaultTableModel userTableModel = (DefaultTableModel) tableUser.getModel();
+            userTableModel.setRowCount(0);
+            
             while (result.next()) {
                 String userId = result.getString("user_id");
                 String email = result.getString("email");
                 Date emailVerifiedAt = result.getDate("email_verified_at");
                 String verifiedAt = String.valueOf(emailVerifiedAt);
+                String role = result.getString("role");
 
-                String users[] = {userId, email, verifiedAt};
-
-                DefaultTableModel userTableModel = (DefaultTableModel) tableUser.getModel();
+                String users[] = {userId, email, verifiedAt, role};
 
                 userTableModel.addRow(users);
             }
+            
+            tableUser.repaint();
         } catch (SQLException e) {
             System.out.println(e.getMessage());
+            MessageError.displayErrorMessage(null, e.getMessage());
         } finally {
             try {
                 if (result != null) {
@@ -50,6 +57,7 @@ public class UserController extends Controller {
                 }
             } catch (SQLException e) {
                 System.out.println(e.getMessage());
+                MessageError.displayErrorMessage(null, e.getMessage());
             }
         }
     }
@@ -72,7 +80,11 @@ public class UserController extends Controller {
             }
             
             if(email.isBlank()) {
-                throw new Exception("Kolom input wajib diisi!");
+                throw new Exception(MessageError.BLANK_INPUT);
+            }
+            
+            if(!email.contains("@")) {
+                throw new Exception(MessageError.INVALID_EMAIL_FORMAT);
             }
             
             query = "INSERT INTO users(user_id, email, password, email_verified_at, role) VALUES (?, ?, ?, ?, ?)";
@@ -83,14 +95,14 @@ public class UserController extends Controller {
             preparedStatement.setDate(4, Date.valueOf(LocalDate.now()));
             preparedStatement.setString(5, role);
             
-            result = preparedStatement.executeQuery();
+            preparedStatement.executeUpdate();
             
-            System.out.println("User berhasil dibuat!");
-            JOptionPane.showMessageDialog(null, "User berhasil dibuat!");
+            System.out.println(MessageSuccess.USER_CREATED);
+            JOptionPane.showMessageDialog(null, MessageSuccess.USER_CREATED);
             
         } catch (Exception e) {
             System.out.println(e.getMessage());
-            JOptionPane.showMessageDialog(null, e.getMessage(), "Failure", JOptionPane.ERROR_MESSAGE);
+            MessageError.displayErrorMessage(null, e.getMessage());
         } finally {
             try {
                 result.close();
@@ -98,7 +110,7 @@ public class UserController extends Controller {
                 conn.close();
             } catch (SQLException e) {
                 System.out.println(e.getMessage());
-                JOptionPane.showMessageDialog(null, e.getMessage(), "Server Error", JOptionPane.ERROR_MESSAGE);
+                MessageError.displayErrorMessage(null, e.getMessage());
             }
         }
     }
@@ -109,7 +121,7 @@ public class UserController extends Controller {
             String role = user.getRole();
             
             if(email.isBlank() || role.isBlank()) {
-                throw new Exception("Kolom input wajib diisi");
+                throw new Exception(MessageError.BLANK_INPUT);
             }
             
             query = "UPDATE users SET email = ?, role = ? WHERE user_id = ?";
@@ -117,18 +129,14 @@ public class UserController extends Controller {
             preparedStatement.setString(1, email);
             preparedStatement.setString(2, role);
             preparedStatement.setString(3, userId);
-
-            result = preparedStatement.executeQuery();
             
-            if(!result.next()) {
-                throw  new Exception("Tidak dapat memperbarui user");
-            }
+            preparedStatement.executeUpdate();
             
-            System.out.println("Berhasil memperbarui user");
-            JOptionPane.showMessageDialog(null, "Berhasil memperbarui user");
+            System.out.println(MessageSuccess.USER_UPDATED);
+            MessageSuccess.displaySuccessMessage(null, MessageSuccess.USER_UPDATED);
         } catch (Exception e) {
             System.out.println(e.getMessage());
-            JOptionPane.showConfirmDialog(null, e.getMessage(), "Failure", JOptionPane.ERROR_MESSAGE);
+            MessageError.displayErrorMessage(null, e.getMessage());
         } finally {
             try {
                 if(result!=null) result.close();
@@ -136,25 +144,27 @@ public class UserController extends Controller {
                 if(conn!=null) conn.close();
             } catch (SQLException e) {
                 System.out.println(e.getMessage());
-                JOptionPane.showMessageDialog(null, e.getMessage(), "Server Error", JOptionPane.ERROR_MESSAGE);
+                MessageError.displayErrorMessage(null, e.getMessage());
             }
         }
     }
     
-    public void deleteUser (String userId) {
+    public void deleteUser(String userId) {
         try {
+            if(userId == null) {
+                throw new Exception(MessageError.USER_NOT_FOUND);
+            }
+            
             query = "DELETE FROM users WHERE user_id = ?";
             preparedStatement = conn.prepareStatement(query);
             preparedStatement.setString(1, userId);
-            result = preparedStatement.executeQuery();
+            preparedStatement.executeUpdate();
             
-            if(!result.next()) {
-                throw new Exception("Tidak dapat menghapus user");
-            }
-            
-            System.out.println("User telah dihapus");
-            JOptionPane.showMessageDialog(null, "User telah dihapus");
+            System.out.println(MessageSuccess.USER_DELETED);
+            MessageSuccess.displaySuccessMessage(null, MessageSuccess.USER_DELETED);
         } catch (Exception e) {
+            System.out.println(e.getMessage());
+            MessageError.displayErrorMessage(null, e.getMessage());
         } finally {
             try {
                 if(result!=null) result.close();
@@ -162,7 +172,7 @@ public class UserController extends Controller {
                 if(conn!=null) conn.close();
             } catch (SQLException e) {
                 System.out.println(e.getMessage());
-                JOptionPane.showMessageDialog(null, e.getMessage(), "Server Error", JOptionPane.ERROR_MESSAGE);
+                MessageError.displayErrorMessage(null, e.getMessage());
             }
         }
     }

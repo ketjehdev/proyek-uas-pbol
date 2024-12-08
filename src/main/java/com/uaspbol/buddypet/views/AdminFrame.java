@@ -4,7 +4,17 @@
  */
 package com.uaspbol.buddypet.views;
 
+import com.uaspbol.buddypet.controllers.AuthController;
+import com.uaspbol.buddypet.controllers.ChangePasswordController;
+import com.uaspbol.buddypet.controllers.ProductController;
+import com.uaspbol.buddypet.controllers.TransactionController;
+import com.uaspbol.buddypet.controllers.UserController;
+import com.uaspbol.buddypet.models.Product;
+import com.uaspbol.buddypet.models.User;
+import com.uaspbol.buddypet.utils.SessionLogin;
 import java.awt.Color;
+import java.util.ArrayList;
+import javax.swing.table.DefaultTableModel;
 
 /**
  *
@@ -20,8 +30,26 @@ public class AdminFrame extends javax.swing.JFrame {
         initComponents();
         defaultcolor = new Color(102,0,0);
         clickedcolor = new Color(187,187,187);
+        getTransactionData();
+        getUserData();
+        getProductData();
     }
-
+    
+    private void getUserData() {
+        UserController user = new UserController();
+        user.findAllUser(tableUser);
+    }
+    
+    private void getProductData() {
+        ProductController product = new ProductController();
+        product.findAllProduct(tableProduct);
+    }
+    
+    private void getTransactionData() {
+        TransactionController transaction = new TransactionController();
+        transaction.findAllTransaction(tableTransaction);
+    }
+ 
     /**
      * This method is called from within the constructor to initialize the form.
      * WARNING: Do NOT modify this code. The content of this method is always
@@ -49,25 +77,44 @@ public class AdminFrame extends javax.swing.JFrame {
         jTabbedPane2 = new javax.swing.JTabbedPane();
         jPanel10 = new javax.swing.JPanel();
         jScrollPane1 = new javax.swing.JScrollPane();
-        jTable1 = new javax.swing.JTable();
+        tableTransaction = new javax.swing.JTable();
         jPanel11 = new javax.swing.JPanel();
         jScrollPane2 = new javax.swing.JScrollPane();
-        jTable2 = new javax.swing.JTable();
+        tableUser = new javax.swing.JTable();
+        emailField = new javax.swing.JTextField();
+        jLabel10 = new javax.swing.JLabel();
+        roleCombo = new javax.swing.JComboBox<>();
+        jLabel11 = new javax.swing.JLabel();
+        updateUserBtn = new javax.swing.JButton();
+        createUserBtn = new javax.swing.JButton();
+        deleteUserBtn = new javax.swing.JButton();
+        resetBtn = new javax.swing.JButton();
         jPanel12 = new javax.swing.JPanel();
         jScrollPane3 = new javax.swing.JScrollPane();
-        jTable3 = new javax.swing.JTable();
+        tableProduct = new javax.swing.JTable();
+        jLabel12 = new javax.swing.JLabel();
+        priceProductField = new javax.swing.JTextField();
+        nameProductField = new javax.swing.JTextField();
+        jLabel13 = new javax.swing.JLabel();
+        stockTotalProductField = new javax.swing.JTextField();
+        stockMinimumProductField = new javax.swing.JTextField();
+        jLabel14 = new javax.swing.JLabel();
+        jLabel15 = new javax.swing.JLabel();
+        deleteProductBtn = new javax.swing.JButton();
+        updateProductBtn = new javax.swing.JButton();
+        createProductBtn = new javax.swing.JButton();
+        resetProductBtn = new javax.swing.JButton();
         jPanel13 = new javax.swing.JPanel();
         jLabel8 = new javax.swing.JLabel();
         jLabel6 = new javax.swing.JLabel();
         jLabel7 = new javax.swing.JLabel();
         jLabel9 = new javax.swing.JLabel();
-        jTextField1 = new javax.swing.JTextField();
-        jTextField2 = new javax.swing.JTextField();
-        jTextField3 = new javax.swing.JTextField();
-        jButton1 = new javax.swing.JButton();
+        oldPasswordField = new javax.swing.JTextField();
+        newPasswordField = new javax.swing.JTextField();
+        confirmNewPasswordField = new javax.swing.JTextField();
+        changePasswordBtn = new javax.swing.JButton();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
-        setPreferredSize(new java.awt.Dimension(930, 560));
         setResizable(false);
         setSize(new java.awt.Dimension(200, 150));
         addWindowListener(new java.awt.event.WindowAdapter() {
@@ -194,6 +241,11 @@ public class AdminFrame extends javax.swing.JFrame {
 
         jPanel8.setBackground(new java.awt.Color(102, 0, 0));
         jPanel8.setForeground(new java.awt.Color(242, 242, 242));
+        jPanel8.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                jPanel8MouseClicked(evt);
+            }
+        });
 
         jLabel5.setForeground(new java.awt.Color(242, 242, 242));
         jLabel5.setText("            LOG OUT");
@@ -274,24 +326,31 @@ public class AdminFrame extends javax.swing.JFrame {
         jPanel10.setBackground(new java.awt.Color(187, 187, 187));
         jPanel10.setLayout(new org.netbeans.lib.awtextra.AbsoluteLayout());
 
-        jTable1.setModel(new javax.swing.table.DefaultTableModel(
+        tableTransaction.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
 
             },
             new String [] {
-                "ID", "Nama Pembeli", "Produk", "Jumlah Dibeli", "Harga Total", "Status", "Tanggal Beli "
+                "Transaction ID", "Order ID", "Payment Channel", "Status"
             }
-        ));
-        jScrollPane1.setViewportView(jTable1);
+        ) {
+            boolean[] canEdit = new boolean [] {
+                false, false, false, false
+            };
+
+            public boolean isCellEditable(int rowIndex, int columnIndex) {
+                return canEdit [columnIndex];
+            }
+        });
+        jScrollPane1.setViewportView(tableTransaction);
 
         jPanel10.add(jScrollPane1, new org.netbeans.lib.awtextra.AbsoluteConstraints(44, 27, 660, 420));
 
         jTabbedPane2.addTab("tab1", jPanel10);
 
         jPanel11.setBackground(new java.awt.Color(187, 187, 187));
-        jPanel11.setLayout(new org.netbeans.lib.awtextra.AbsoluteLayout());
 
-        jTable2.setModel(new javax.swing.table.DefaultTableModel(
+        tableUser.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
 
             },
@@ -299,16 +358,100 @@ public class AdminFrame extends javax.swing.JFrame {
                 "User ID", "Email", "Email Verified at", "Role"
             }
         ));
-        jScrollPane2.setViewportView(jTable2);
+        tableUser.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                tableUserMouseClicked(evt);
+            }
+        });
+        jScrollPane2.setViewportView(tableUser);
 
-        jPanel11.add(jScrollPane2, new org.netbeans.lib.awtextra.AbsoluteConstraints(64, 37, 630, 400));
+        jLabel10.setText("Email Pengguna:");
+
+        roleCombo.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "customer", "admin" }));
+
+        jLabel11.setText("Role:");
+
+        updateUserBtn.setText("UPDATE");
+        updateUserBtn.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                updateUserBtnActionPerformed(evt);
+            }
+        });
+
+        createUserBtn.setText("CREATE");
+        createUserBtn.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                createUserBtnActionPerformed(evt);
+            }
+        });
+
+        deleteUserBtn.setText("DELETE");
+        deleteUserBtn.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                deleteUserBtnActionPerformed(evt);
+            }
+        });
+
+        resetBtn.setText("RESET");
+        resetBtn.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                resetBtnActionPerformed(evt);
+            }
+        });
+
+        javax.swing.GroupLayout jPanel11Layout = new javax.swing.GroupLayout(jPanel11);
+        jPanel11.setLayout(jPanel11Layout);
+        jPanel11Layout.setHorizontalGroup(
+            jPanel11Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(jPanel11Layout.createSequentialGroup()
+                .addGap(64, 64, 64)
+                .addGroup(jPanel11Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                    .addGroup(jPanel11Layout.createSequentialGroup()
+                        .addComponent(deleteUserBtn, javax.swing.GroupLayout.PREFERRED_SIZE, 200, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                        .addComponent(updateUserBtn, javax.swing.GroupLayout.PREFERRED_SIZE, 206, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                        .addComponent(createUserBtn, javax.swing.GroupLayout.DEFAULT_SIZE, 200, Short.MAX_VALUE))
+                    .addComponent(jScrollPane2)
+                    .addGroup(jPanel11Layout.createSequentialGroup()
+                        .addGroup(jPanel11Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(emailField, javax.swing.GroupLayout.PREFERRED_SIZE, 346, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(jLabel10, javax.swing.GroupLayout.PREFERRED_SIZE, 98, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                        .addGroup(jPanel11Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(jLabel11)
+                            .addComponent(roleCombo, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)))
+                    .addComponent(resetBtn, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                .addGap(76, 76, 76))
+        );
+        jPanel11Layout.setVerticalGroup(
+            jPanel11Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(jPanel11Layout.createSequentialGroup()
+                .addGap(37, 37, 37)
+                .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, 170, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(21, 21, 21)
+                .addGroup(jPanel11Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(jLabel10)
+                    .addComponent(jLabel11))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addGroup(jPanel11Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                    .addComponent(roleCombo, javax.swing.GroupLayout.DEFAULT_SIZE, 40, Short.MAX_VALUE)
+                    .addComponent(emailField))
+                .addGap(18, 18, 18)
+                .addGroup(jPanel11Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(updateUserBtn, javax.swing.GroupLayout.PREFERRED_SIZE, 45, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(createUserBtn, javax.swing.GroupLayout.PREFERRED_SIZE, 45, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(deleteUserBtn, javax.swing.GroupLayout.PREFERRED_SIZE, 45, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addGap(18, 18, 18)
+                .addComponent(resetBtn, javax.swing.GroupLayout.PREFERRED_SIZE, 50, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addContainerGap())
+        );
 
         jTabbedPane2.addTab("tab2", jPanel11);
 
         jPanel12.setBackground(new java.awt.Color(187, 187, 187));
-        jPanel12.setLayout(new org.netbeans.lib.awtextra.AbsoluteLayout());
 
-        jTable3.setModel(new javax.swing.table.DefaultTableModel(
+        tableProduct.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
 
             },
@@ -316,9 +459,109 @@ public class AdminFrame extends javax.swing.JFrame {
                 "Product ID", "Name ", "Price", "Stock Total ", "Stock Minimum"
             }
         ));
-        jScrollPane3.setViewportView(jTable3);
+        tableProduct.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                tableProductMouseClicked(evt);
+            }
+        });
+        jScrollPane3.setViewportView(tableProduct);
 
-        jPanel12.add(jScrollPane3, new org.netbeans.lib.awtextra.AbsoluteConstraints(69, 27, 620, 410));
+        jLabel12.setText("Nama Produk:");
+
+        jLabel13.setText("Harga Produk:");
+
+        jLabel14.setText("Stok Total");
+
+        jLabel15.setText("Minimum Stok:");
+
+        deleteProductBtn.setText("DELETE");
+        deleteProductBtn.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                deleteProductBtnActionPerformed(evt);
+            }
+        });
+
+        updateProductBtn.setText("UPDATE");
+        updateProductBtn.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                updateProductBtnActionPerformed(evt);
+            }
+        });
+
+        createProductBtn.setText("CREATE");
+        createProductBtn.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                createProductBtnActionPerformed(evt);
+            }
+        });
+
+        resetProductBtn.setText("RESET");
+        resetProductBtn.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                resetProductBtnActionPerformed(evt);
+            }
+        });
+
+        javax.swing.GroupLayout jPanel12Layout = new javax.swing.GroupLayout(jPanel12);
+        jPanel12.setLayout(jPanel12Layout);
+        jPanel12Layout.setHorizontalGroup(
+            jPanel12Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(jPanel12Layout.createSequentialGroup()
+                .addGap(69, 69, 69)
+                .addGroup(jPanel12Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                    .addComponent(jScrollPane3)
+                    .addGroup(jPanel12Layout.createSequentialGroup()
+                        .addGroup(jPanel12Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(nameProductField, javax.swing.GroupLayout.PREFERRED_SIZE, 190, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(jLabel12))
+                        .addGap(18, 18, 18)
+                        .addGroup(jPanel12Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(priceProductField, javax.swing.GroupLayout.PREFERRED_SIZE, 190, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(jLabel13))
+                        .addGap(18, 18, 18)
+                        .addGroup(jPanel12Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(stockTotalProductField, javax.swing.GroupLayout.PREFERRED_SIZE, 109, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(jLabel14))
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                        .addGroup(jPanel12Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(jLabel15)
+                            .addComponent(stockMinimumProductField, javax.swing.GroupLayout.PREFERRED_SIZE, 103, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                    .addGroup(jPanel12Layout.createSequentialGroup()
+                        .addComponent(deleteProductBtn, javax.swing.GroupLayout.PREFERRED_SIZE, 200, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGap(18, 18, 18)
+                        .addComponent(updateProductBtn, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                        .addGap(18, 18, 18)
+                        .addComponent(createProductBtn, javax.swing.GroupLayout.PREFERRED_SIZE, 189, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addComponent(resetProductBtn, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                .addGap(81, 81, 81))
+        );
+        jPanel12Layout.setVerticalGroup(
+            jPanel12Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(jPanel12Layout.createSequentialGroup()
+                .addGap(27, 27, 27)
+                .addComponent(jScrollPane3, javax.swing.GroupLayout.PREFERRED_SIZE, 170, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(16, 16, 16)
+                .addGroup(jPanel12Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(jLabel12)
+                    .addComponent(jLabel13)
+                    .addComponent(jLabel14)
+                    .addComponent(jLabel15))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addGroup(jPanel12Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                    .addGroup(jPanel12Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                        .addComponent(stockTotalProductField, javax.swing.GroupLayout.PREFERRED_SIZE, 41, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addComponent(stockMinimumProductField, javax.swing.GroupLayout.PREFERRED_SIZE, 41, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addComponent(priceProductField)
+                    .addComponent(nameProductField))
+                .addGap(18, 18, 18)
+                .addGroup(jPanel12Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(deleteProductBtn, javax.swing.GroupLayout.PREFERRED_SIZE, 49, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(createProductBtn, javax.swing.GroupLayout.PREFERRED_SIZE, 49, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(updateProductBtn, javax.swing.GroupLayout.PREFERRED_SIZE, 49, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addGap(18, 18, 18)
+                .addComponent(resetProductBtn, javax.swing.GroupLayout.PREFERRED_SIZE, 49, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addContainerGap(59, Short.MAX_VALUE))
+        );
 
         jTabbedPane2.addTab("tab3", jPanel12);
 
@@ -333,13 +576,13 @@ public class AdminFrame extends javax.swing.JFrame {
 
         jLabel9.setText("Confirm Password   :");
 
-        jButton1.setBackground(new java.awt.Color(153, 0, 0));
-        jButton1.setFont(new java.awt.Font("Segoe UI", 0, 14)); // NOI18N
-        jButton1.setForeground(new java.awt.Color(255, 255, 255));
-        jButton1.setText("CHANGE PASSWORD");
-        jButton1.addActionListener(new java.awt.event.ActionListener() {
+        changePasswordBtn.setBackground(new java.awt.Color(153, 0, 0));
+        changePasswordBtn.setFont(new java.awt.Font("Segoe UI", 0, 14)); // NOI18N
+        changePasswordBtn.setForeground(new java.awt.Color(255, 255, 255));
+        changePasswordBtn.setText("CHANGE PASSWORD");
+        changePasswordBtn.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jButton1ActionPerformed(evt);
+                changePasswordBtnActionPerformed(evt);
             }
         });
 
@@ -350,22 +593,22 @@ public class AdminFrame extends javax.swing.JFrame {
             .addGroup(jPanel13Layout.createSequentialGroup()
                 .addGap(81, 81, 81)
                 .addGroup(jPanel13Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(jButton1)
+                    .addComponent(changePasswordBtn)
                     .addComponent(jLabel6)
                     .addGroup(jPanel13Layout.createSequentialGroup()
                         .addComponent(jLabel7, javax.swing.GroupLayout.PREFERRED_SIZE, 112, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                        .addComponent(jTextField1, javax.swing.GroupLayout.PREFERRED_SIZE, 230, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addComponent(oldPasswordField, javax.swing.GroupLayout.PREFERRED_SIZE, 230, javax.swing.GroupLayout.PREFERRED_SIZE))
                     .addGroup(jPanel13Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
                         .addGroup(jPanel13Layout.createSequentialGroup()
                             .addComponent(jLabel9)
                             .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                            .addComponent(jTextField3))
+                            .addComponent(confirmNewPasswordField))
                         .addGroup(jPanel13Layout.createSequentialGroup()
                             .addComponent(jLabel8)
                             .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                            .addComponent(jTextField2, javax.swing.GroupLayout.PREFERRED_SIZE, 230, javax.swing.GroupLayout.PREFERRED_SIZE))))
-                .addContainerGap(335, Short.MAX_VALUE))
+                            .addComponent(newPasswordField, javax.swing.GroupLayout.PREFERRED_SIZE, 230, javax.swing.GroupLayout.PREFERRED_SIZE))))
+                .addContainerGap(355, Short.MAX_VALUE))
         );
         jPanel13Layout.setVerticalGroup(
             jPanel13Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -375,17 +618,17 @@ public class AdminFrame extends javax.swing.JFrame {
                 .addGap(29, 29, 29)
                 .addGroup(jPanel13Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jLabel7, javax.swing.GroupLayout.PREFERRED_SIZE, 28, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(jTextField1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addComponent(oldPasswordField, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addGap(18, 18, 18)
                 .addGroup(jPanel13Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jLabel8)
-                    .addComponent(jTextField2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addComponent(newPasswordField, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addGap(18, 18, 18)
                 .addGroup(jPanel13Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jLabel9)
-                    .addComponent(jTextField3, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addComponent(confirmNewPasswordField, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addGap(18, 18, 18)
-                .addComponent(jButton1, javax.swing.GroupLayout.PREFERRED_SIZE, 42, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addComponent(changePasswordBtn, javax.swing.GroupLayout.PREFERRED_SIZE, 42, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addContainerGap(168, Short.MAX_VALUE))
         );
 
@@ -407,6 +650,7 @@ public class AdminFrame extends javax.swing.JFrame {
         );
 
         pack();
+        setLocationRelativeTo(null);
     }// </editor-fold>//GEN-END:initComponents
 
     private void jLabel1MouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jLabel1MouseClicked
@@ -418,6 +662,7 @@ public class AdminFrame extends javax.swing.JFrame {
         jPanel7.setBackground(defaultcolor);
         jPanel8.setBackground(defaultcolor);
         title.setText("RINGKASAN PENJUALAN");
+        getTransactionData();
     }//GEN-LAST:event_jLabel1MouseClicked
 
     private void jLabel2MouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jLabel2MouseClicked
@@ -455,7 +700,8 @@ public class AdminFrame extends javax.swing.JFrame {
 
     private void jLabel5MouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jLabel5MouseClicked
         // TODO add your handling code here:
-        jTabbedPane2.setSelectedIndex(4);
+        AuthController auth = new AuthController();
+        auth.logout(this);
     }//GEN-LAST:event_jLabel5MouseClicked
 
     private void formWindowOpened(java.awt.event.WindowEvent evt) {//GEN-FIRST:event_formWindowOpened
@@ -469,10 +715,149 @@ public class AdminFrame extends javax.swing.JFrame {
         
     }//GEN-LAST:event_formWindowOpened
 
-    private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
+    private void changePasswordBtnActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_changePasswordBtnActionPerformed
         // TODO add your handling code here:
-    }//GEN-LAST:event_jButton1ActionPerformed
+        ChangePasswordController changePassword = new ChangePasswordController();
+        ArrayList<String> password =  new ArrayList<>();
+        
+        String userId = SessionLogin.getUserId();
+        System.out.println(userId);
+        password.add(oldPasswordField.getText());
+        password.add(newPasswordField.getText());
+        password.add(confirmNewPasswordField.getText());
+        
+        changePassword.updatePassword(userId, password);
+        oldPasswordField.setText("");
+        newPasswordField.setText("");
+        confirmNewPasswordField.setText("");
+    }//GEN-LAST:event_changePasswordBtnActionPerformed
 
+    private void tableUserMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_tableUserMouseClicked
+        // TODO add your handling code here:
+        int row = tableUser.getSelectedRow();
+        DefaultTableModel model = (DefaultTableModel) tableUser.getModel();
+        
+        userIdSelected = model.getValueAt(row, 0).toString();
+        emailField.setText(model.getValueAt(row, 1).toString());
+        roleCombo.setSelectedItem(model.getValueAt(row, 3).toString());
+    }//GEN-LAST:event_tableUserMouseClicked
+
+    private void createUserBtnActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_createUserBtnActionPerformed
+        // TODO add your handling code here:
+        UserController user = new UserController();
+        User userModel = new User();
+        
+        userModel.setEmail(emailField.getText());
+        userModel.setRole(roleCombo.getSelectedItem().toString());
+        
+        user.createUser(userModel);
+        
+        resetTextUser();
+        getUserData();
+    }//GEN-LAST:event_createUserBtnActionPerformed
+
+    private void updateUserBtnActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_updateUserBtnActionPerformed
+        // TODO add your handling code here:
+        UserController user = new UserController();
+        User userModel = new User();
+        
+        userModel.setEmail(emailField.getText());
+        userModel.setRole(roleCombo.getSelectedItem().toString());
+        user.updateUser(userIdSelected, userModel);
+        
+        resetTextUser();
+        getUserData();
+    }//GEN-LAST:event_updateUserBtnActionPerformed
+
+    private void deleteUserBtnActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_deleteUserBtnActionPerformed
+        // TODO add your handling code here:
+        UserController user = new UserController();
+        user.deleteUser(userIdSelected);
+        resetTextUser();
+        getUserData();
+    }//GEN-LAST:event_deleteUserBtnActionPerformed
+
+    private void resetBtnActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_resetBtnActionPerformed
+        // TODO add your handling code here:
+        resetTextUser();
+    }//GEN-LAST:event_resetBtnActionPerformed
+
+    private void createProductBtnActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_createProductBtnActionPerformed
+        // TODO add your handling code here:
+        ProductController product = new ProductController();
+        Product productModel = new Product();
+        productModel.setProductName(nameProductField.getText());
+        productModel.setProductPrice(priceProductField.getText());
+        productModel.setProductStockTotal(stockTotalProductField.getText());
+        productModel.setProductStockMinimum(stockMinimumProductField.getText());
+        
+        product.createProduct(productModel);
+        
+        resetTextProduct();
+        getProductData();
+    }//GEN-LAST:event_createProductBtnActionPerformed
+
+    private void updateProductBtnActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_updateProductBtnActionPerformed
+        // TODO add your handling code here:
+        ProductController product = new ProductController();
+        Product productModel = new Product();
+        
+        productModel.setProductName(nameProductField.getText());
+        productModel.setProductPrice(priceProductField.getText());
+        productModel.setProductStockTotal(stockTotalProductField.getText());
+        productModel.setProductStockMinimum(stockMinimumProductField.getText());
+        
+        product.updateProduct(productIdSelected, productModel);
+        
+        resetTextProduct();
+        
+        getProductData();
+    }//GEN-LAST:event_updateProductBtnActionPerformed
+
+    private void deleteProductBtnActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_deleteProductBtnActionPerformed
+        // TODO add your handling code here:
+        ProductController product = new ProductController();
+        product.deleteProduct(productIdSelected);
+        
+        resetTextProduct();
+        getProductData();
+    }//GEN-LAST:event_deleteProductBtnActionPerformed
+
+    private void tableProductMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_tableProductMouseClicked
+        // TODO add your handling code here:
+        int row = tableProduct.getSelectedRow();
+        DefaultTableModel model = (DefaultTableModel) tableProduct.getModel();
+        
+        productIdSelected = model.getValueAt(row, 0).toString();
+        nameProductField.setText(model.getValueAt(row, 1).toString());
+        priceProductField.setText(model.getValueAt(row, 2).toString());
+        stockTotalProductField.setText(model.getValueAt(row, 3).toString());
+        stockMinimumProductField.setText(model.getValueAt(row, 4).toString());
+    }//GEN-LAST:event_tableProductMouseClicked
+
+    private void jPanel8MouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jPanel8MouseClicked
+        // TODO add your handling code here:
+    }//GEN-LAST:event_jPanel8MouseClicked
+
+    private void resetProductBtnActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_resetProductBtnActionPerformed
+        // TODO add your handling code here:
+        resetTextProduct();
+    }//GEN-LAST:event_resetProductBtnActionPerformed
+    
+    private void resetTextUser() {
+        userIdSelected = null;
+        emailField.setText("");
+        roleCombo.setSelectedItem("customer");
+    }
+    
+    private void resetTextProduct() {
+        productIdSelected = null;
+        nameProductField.setText("");
+        priceProductField.setText("");
+        stockTotalProductField.setText("");
+        stockMinimumProductField.setText("");
+    }
+    
     /**
      * @param args the command line arguments
      */
@@ -509,8 +894,20 @@ public class AdminFrame extends javax.swing.JFrame {
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
-    private javax.swing.JButton jButton1;
+    private javax.swing.JButton changePasswordBtn;
+    private javax.swing.JTextField confirmNewPasswordField;
+    private javax.swing.JButton createProductBtn;
+    private javax.swing.JButton createUserBtn;
+    private javax.swing.JButton deleteProductBtn;
+    private javax.swing.JButton deleteUserBtn;
+    private javax.swing.JTextField emailField;
     private javax.swing.JLabel jLabel1;
+    private javax.swing.JLabel jLabel10;
+    private javax.swing.JLabel jLabel11;
+    private javax.swing.JLabel jLabel12;
+    private javax.swing.JLabel jLabel13;
+    private javax.swing.JLabel jLabel14;
+    private javax.swing.JLabel jLabel15;
     private javax.swing.JLabel jLabel2;
     private javax.swing.JLabel jLabel3;
     private javax.swing.JLabel jLabel4;
@@ -536,12 +933,23 @@ public class AdminFrame extends javax.swing.JFrame {
     private javax.swing.JScrollPane jScrollPane2;
     private javax.swing.JScrollPane jScrollPane3;
     private javax.swing.JTabbedPane jTabbedPane2;
-    private javax.swing.JTable jTable1;
-    private javax.swing.JTable jTable2;
-    private javax.swing.JTable jTable3;
-    private javax.swing.JTextField jTextField1;
-    private javax.swing.JTextField jTextField2;
-    private javax.swing.JTextField jTextField3;
+    private javax.swing.JTextField nameProductField;
+    private javax.swing.JTextField newPasswordField;
+    private javax.swing.JTextField oldPasswordField;
+    private javax.swing.JTextField priceProductField;
+    private javax.swing.JButton resetBtn;
+    private javax.swing.JButton resetProductBtn;
+    private javax.swing.JComboBox<String> roleCombo;
+    private javax.swing.JTextField stockMinimumProductField;
+    private javax.swing.JTextField stockTotalProductField;
+    private javax.swing.JTable tableProduct;
+    private javax.swing.JTable tableTransaction;
+    private javax.swing.JTable tableUser;
     private javax.swing.JLabel title;
+    private javax.swing.JButton updateProductBtn;
+    private javax.swing.JButton updateUserBtn;
     // End of variables declaration//GEN-END:variables
+
+    private String userIdSelected;
+    private String productIdSelected;
 }
